@@ -1,4 +1,4 @@
-import { Table } from "@radix-ui/themes";
+import { Table, Text } from "@radix-ui/themes";
 import { Task } from "../types/data.type";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import api from "../services/api";
@@ -8,6 +8,7 @@ import UpdateOptionButton from "./UpdateOptionButton";
 export interface TableComponentProps {
     tasks: Task[]
     setTasks: Dispatch<SetStateAction<Task[]>>
+    loading: boolean
 }
 
 export interface ActionButtonsProps {
@@ -17,10 +18,12 @@ export interface ActionButtonsProps {
 }
 
 
-const TableComponent = ({ tasks, setTasks }: TableComponentProps) => {
+const TableComponent = ({ tasks, setTasks, loading }: TableComponentProps) => {
     const [tasksIDs, setTasksIDs] = useState<number[]>([]);
     const [dragItem, setDragItem] = useState<number | null>(null);
     const [dragItemOver, setDragItemOver] = useState<number | null>(null);
+
+    
 
     useEffect(() => {
         const ids = tasks.map((task) => task.id) as number[];
@@ -96,32 +99,40 @@ const TableComponent = ({ tasks, setTasks }: TableComponentProps) => {
             </Table.Header>
 
             <Table.Body>
-                {tasks.map((task: Task) => {
-                    const taskID: number = task.id as number;
-                    const isDraggingOver = dragItemOver === taskID;
-                    const costColor = task.cost >= 1000 ? 'bg-red-950' : ''
-                    return (
-                        <Table.Row
-                            key={task.id}
-                            className={`${costColor} ${isDraggingOver ? 'bg-gray-700' : ''} h-14`}
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, taskID)}
-                            onDragEnd={handleDragEnd}
-                            onDragOver={(e) => handleDragOver(e, taskID)}
-                            onDrop={handleDrop}
-                        >
-                            <Table.RowHeaderCell align="center">{task.name}</Table.RowHeaderCell>
-                            <Table.Cell align="center">{task.cost}</Table.Cell>
-                            <Table.Cell align="center">{task.dueDate}</Table.Cell>
-                            <Table.Cell align="center">
-                                <div className="flex gap-2 justify-center">
-                                    <UpdateOptionButton task={task} tasks={tasks} setTasks={setTasks} />
-                                    <DeleteOptionButton task={task} tasks={tasks} setTasks={setTasks} />
-                                </div>
-                            </Table.Cell>
-                        </Table.Row>
-                    );
-                })}
+                    {
+                        loading && 
+                        <div className="p-10">
+                            <Text className="animate-pulse text-[20px]">Loading<span className="animate-bounce">...</span></Text>
+                            <p>Pode ser que demore cerca de 50s para aparecer os dados por conta da hibernação que ocorre no servidor</p>
+                        </div>
+                            
+                    }
+                    { tasks.map((task: Task) => {
+                        const taskID: number = task.id as number;
+                        const isDraggingOver = dragItemOver === taskID;
+                        const costColor = task.cost >= 1000 ? 'bg-red-950' : ''
+                        return (
+                            <Table.Row
+                                key={task.id}
+                                className={`${costColor} ${isDraggingOver ? 'bg-gray-700' : ''} h-14`}
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, taskID)}
+                                onDragEnd={handleDragEnd}
+                                onDragOver={(e) => handleDragOver(e, taskID)}
+                                onDrop={handleDrop}
+                            >
+                                <Table.RowHeaderCell align="center">{task.name}</Table.RowHeaderCell>
+                                <Table.Cell align="center">{task.cost}</Table.Cell>
+                                <Table.Cell align="center">{task.dueDate}</Table.Cell>
+                                <Table.Cell align="center">
+                                    <div className="flex gap-2 justify-center">
+                                        <UpdateOptionButton task={task} tasks={tasks} setTasks={setTasks} />
+                                        <DeleteOptionButton task={task} tasks={tasks} setTasks={setTasks} />
+                                    </div>
+                                </Table.Cell>
+                            </Table.Row>
+                        );
+                    })}
             </Table.Body>
         </Table.Root>
     );
