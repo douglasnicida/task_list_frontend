@@ -3,6 +3,8 @@
 ## Description
 This task management application allows users to create, view, edit, and delete tasks intuitively. With a user-friendly interface, users can easily drag and drop tasks to reorganize them, reflecting their priorities.
 
+![print-task-list](https://github.com/user-attachments/assets/da9f0524-3e74-46ae-89eb-3de6923a737a)
+
 ## Features
 - **Task Management**: Add new tasks with a unique name, cost, and due date.
 - **Drag-and-Drop Reordering**: Move tasks around to change their order quickly.
