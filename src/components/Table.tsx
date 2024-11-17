@@ -88,6 +88,14 @@ const TableComponent = ({ tasks, setTasks, loading }: TableComponentProps) => {
     }
 
     return (
+        <div className="relative">
+        {
+            loading && 
+            <div className="absolute z-50 bottom-10 left-10">
+                <Text className="animate-pulse text-[20px]">Loading<span className="animate-bounce">...</span></Text>
+                <p>Pode ser que demore para aparecer os dados por conta da hibernação que ocorre no servidor</p>
+            </div>
+        }
         <Table.Root variant="surface" size='3' className="h-[calc(100vh-80px-40px)] overflow-y-scroll">
             <Table.Header>
                 <Table.Row>
@@ -99,14 +107,6 @@ const TableComponent = ({ tasks, setTasks, loading }: TableComponentProps) => {
             </Table.Header>
 
             <Table.Body>
-                    {
-                        loading && 
-                        <div className="p-10">
-                            <Text className="animate-pulse text-[20px]">Loading<span className="animate-bounce">...</span></Text>
-                            <p>Pode ser que demore cerca de 50s para aparecer os dados por conta da hibernação que ocorre no servidor</p>
-                        </div>
-                            
-                    }
                     { tasks.map((task: Task) => {
                         const taskID: number = task.id as number;
                         const isDraggingOver = dragItemOver === taskID;
@@ -135,6 +135,7 @@ const TableComponent = ({ tasks, setTasks, loading }: TableComponentProps) => {
                     })}
             </Table.Body>
         </Table.Root>
+        </div>
     );
 };
 
